@@ -20,6 +20,8 @@ along with 'ipsa' package.  If not, see <http://www.gnu.org/licenses/>.
 
 Integrative Pipeline for Splicing Analyses (IPSA)
 
+**This is a short version. The full version is availbale here https://github.com/pervouchine/ipsa-full**
+
 * DISCLAIMER
  
   Software and documentation in this release are very preliminary.
