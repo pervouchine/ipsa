@@ -1,3 +1,5 @@
+**NOTE: This is a light version. The full version is availbale here https://github.com/pervouchine/ipsa-full**
+
 Copyright 2014 Dmitri Pervouchine (dp@crg.eu), Lab Roderic Guigo
 Bioinformatics and Genomics Group @ Centre for Genomic Regulation
 Parc de Recerca Biomedica: Dr. Aiguader, 88, 08003 Barcelona
@@ -19,8 +21,6 @@ along with 'ipsa' package.  If not, see <http://www.gnu.org/licenses/>.
 ============================================================================
 
 Integrative Pipeline for Splicing Analyses (IPSA)
-
-**This is a short version. The full version is availbale here https://github.com/pervouchine/ipsa-full**
 
 * DISCLAIMER
  
