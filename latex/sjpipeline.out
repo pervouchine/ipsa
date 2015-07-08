@@ -1,0 +1,23 @@
+\BOOKMARK [1][-]{section.1}{Synopsis}{}% 1
+\BOOKMARK [1][-]{section.2}{Detailed description of the components}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{RNA dashboard index file}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Pipeline generator}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Pre-processing}{section.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Annotation pre-processing}{subsection.2.3}% 6
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Genome pre-processing}{subsection.2.3}% 7
+\BOOKMARK [2][-]{subsection.2.4}{SJPIPE pipeline}{section.2}% 8
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Counting splice junctions and reads that overlap splice sites}{subsection.2.4}% 9
+\BOOKMARK [3][-]{subsubsection.2.4.2}{Aggregating SJ counts over offsets}{subsection.2.4}% 10
+\BOOKMARK [3][-]{subsubsection.2.4.3}{Annotation status and splice site nucleotides}{subsection.2.4}% 11
+\BOOKMARK [3][-]{subsubsection.2.4.4}{Strand choice}{subsection.2.4}% 12
+\BOOKMARK [3][-]{subsubsection.2.4.5}{Constraining splice site counts}{subsection.2.4}% 13
+\BOOKMARK [2][-]{subsection.2.5}{Ascertainment of reproducibility \(IDR\)}{section.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Filtering}{subsection.2.5}% 15
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Calculation of splicing indices}{subsection.2.5}% 16
+\BOOKMARK [2][-]{subsection.2.6}{TXPIPE pipeline}{section.2}% 17
+\BOOKMARK [3][-]{subsubsection.2.6.1}{Splicing indices from transcript quantification data}{subsection.2.6}% 18
+\BOOKMARK [2][-]{subsection.2.7}{Master tables and endpoints}{section.2}% 19
+\BOOKMARK [1][-]{section.3}{Quality control functions}{}% 20
+\BOOKMARK [2][-]{subsection.3.1}{Distribution of offsets}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.2}{Strand disproportion}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.3}{Summary stats on annotation status and splice sites}{section.3}% 23

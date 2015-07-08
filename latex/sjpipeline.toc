@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {1}Synopsis}{2}{section.1}
+\contentsline {section}{\numberline {2}Detailed description of the components}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}RNA dashboard index file}{3}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Pipeline generator}{3}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Pre-processing}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Annotation pre-processing}{4}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Genome pre-processing}{5}{subsubsection.2.3.2}
+\contentsline {subsection}{\numberline {2.4}SJPIPE pipeline}{6}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Counting splice junctions and reads that overlap splice sites}{6}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}Aggregating SJ counts over offsets}{7}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Annotation status and splice site nucleotides}{8}{subsubsection.2.4.3}
+\contentsline {subsubsection}{\numberline {2.4.4}Strand choice}{10}{subsubsection.2.4.4}
+\contentsline {subsubsection}{\numberline {2.4.5}Constraining splice site counts}{10}{subsubsection.2.4.5}
+\contentsline {subsection}{\numberline {2.5}Ascertainment of reproducibility (IDR)}{11}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Filtering}{11}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Calculation of splicing indices}{11}{subsubsection.2.5.2}
+\contentsline {subsection}{\numberline {2.6}TXPIPE pipeline}{13}{subsection.2.6}
+\contentsline {subsubsection}{\numberline {2.6.1}Splicing indices from transcript quantification data}{13}{subsubsection.2.6.1}
+\contentsline {subsection}{\numberline {2.7}Master tables and endpoints}{13}{subsection.2.7}
+\contentsline {section}{\numberline {3}Quality control functions}{14}{section.3}
+\contentsline {subsection}{\numberline {3.1}Distribution of offsets}{14}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Strand disproportion}{14}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Summary stats on annotation status and splice sites}{15}{subsection.3.3}

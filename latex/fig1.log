@@ -1,0 +1,585 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2013.5.14)  31 OCT 2014 12:35
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**fig1
+(./fig1.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
+c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
+h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
+h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
+ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
+rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
+kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
+ piedmontese, polish, portuguese, romanian, romansh, russian, sanskrit, serbian
+, serbianc, slovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, u
+ppersorbian, welsh, loaded.
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen103
+\extrarowheight=\dimen104
+\NC@list=\toks14
+\extratabsurround=\skip43
+\backup@length=\skip44
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks15
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/latexconfig/graphics.
+cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pdftex-def/pdftex.def
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/infwarerr.
+sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/ltxcmds.st
+y
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count87
+))
+\Gin@req@height=\dimen105
+\Gin@req@width=\dimen106
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2008/03/30 v1.1d Input encoding file
+\inpenc@prehook=\toks16
+\inpenc@posthook=\toks17
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/base/latin1.def
+File: latin1.def 2008/03/30 v1.1d Input encoding file
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/frontendlayer/tik
+z.sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/basiclayer/pgf.st
+y
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/utilities/pgfrcs.
+sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfut
+il-common.tex
+\pgfutil@everybye=\toks18
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfut
+il-latex.def
+\pgfutil@abb=\box26
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfrc
+s.code.tex
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/basiclayer/pgfcor
+e.sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/systemlayer/pgfsy
+s.sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+sys.code.tex
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfke
+ys.code.tex
+\pgfkeys@pathtoks=\toks19
+\pgfkeys@temptoks=\toks20
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfke
+ysfiltered.code.tex
+\pgfkeys@tmptoks=\toks21
+))
+\pgf@x=\dimen107
+\pgf@y=\dimen108
+\pgf@xa=\dimen109
+\pgf@ya=\dimen110
+\pgf@xb=\dimen111
+\pgf@yb=\dimen112
+\pgf@xc=\dimen113
+\pgf@yc=\dimen114
+\w@pgf@writea=\write3
+\r@pgf@reada=\read1
+\c@pgf@counta=\count88
+\c@pgf@countb=\count89
+\c@pgf@countc=\count90
+\c@pgf@countd=\count91
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+sys-pdftex.def
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+sys-common-pdf.def
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+)))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+syssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count92
+\pgfsyssoftpath@bigbuffer@items=\count93
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/systemlayer/pgf
+sysprotocol.code.tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+ore.code.tex
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmath.co
+de.tex
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathcal
+c.code.tex
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathuti
+l.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathpar
+ser.code.tex
+\pgfmath@dimen=\dimen115
+\pgfmath@count=\count94
+\pgfmath@box=\box27
+\pgfmath@toks=\toks22
+\pgfmath@stack@operand=\toks23
+\pgfmath@stack@operation=\toks24
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.code.tex
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.basic.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.trigonometric.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.random.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.comparison.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.base.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.round.code.tex)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathfun
+ctions.misc.code.tex)))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/math/pgfmathflo
+at.code.tex
+\c@pgfmathroundto@lastzeros=\count95
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orepoints.code.tex
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen116
+\pgf@picmaxx=\dimen117
+\pgf@picminy=\dimen118
+\pgf@picmaxy=\dimen119
+\pgf@pathminx=\dimen120
+\pgf@pathmaxx=\dimen121
+\pgf@pathminy=\dimen122
+\pgf@pathmaxy=\dimen123
+\pgf@xx=\dimen124
+\pgf@xy=\dimen125
+\pgf@yx=\dimen126
+\pgf@yy=\dimen127
+\pgf@zx=\dimen128
+\pgf@zy=\dimen129
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orepathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen130
+\pgf@path@lasty=\dimen131
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orepathusage.code.tex
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen132
+\pgf@shorten@start@additional=\dimen133
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orescopes.code.tex
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box28
+\pgf@hbox=\box29
+\pgf@layerbox@main=\box30
+\pgf@picture@serial@count=\count96
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oregraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen134
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oretransformations.code.tex
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen135
+\pgf@pt@y=\dimen136
+\pgf@pt@temp=\dimen137
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orequick.code.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oreobjects.code.tex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orepathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orearrows.code.tex
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oreshade.code.tex
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen138
+\pgf@sys@shading@range@num=\count97
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oreimage.code.tex
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oreexternal.code.tex
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box31
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orelayers.code.tex
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+oretransparency.code.tex
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/basiclayer/pgfc
+orepatterns.code.tex
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+)))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/modules/pgfmodu
+leshapes.code.tex
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box32
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/modules/pgfmodu
+leplot.code.tex
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/compatibility/pgf
+comp-version-0-65.sty
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen139
+\pgf@nodesepend=\dimen140
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/compatibility/pgf
+comp-version-1-18.sty
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/utilities/pgffor.
+sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/pgf/utilities/pgfkeys
+.sty
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgfke
+ys.code.tex))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/utilities/pgffo
+r.code.tex
+Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+\pgffor@iter=\dimen141
+\pgffor@skip=\dimen142
+\pgffor@stack=\toks25
+\pgffor@toks=\toks26
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/tikz.code.tex
+Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/pgfli
+braryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
+\pgf@plot@mark@count=\count98
+\pgfplotmarksize=\dimen143
+)
+\tikz@lastx=\dimen144
+\tikz@lasty=\dimen145
+\tikz@lastxsaved=\dimen146
+\tikz@lastysaved=\dimen147
+\tikzleveldistance=\dimen148
+\tikzsiblingdistance=\dimen149
+\tikz@figbox=\box33
+\tikz@tempbox=\box34
+\tikztreelevel=\count99
+\tikznumberofchildren=\count100
+\tikznumberofcurrentchild=\count101
+\tikz@fig@count=\count102
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/modules/pgfmodu
+lematrix.code.tex
+File: pgfmodulematrix.code.tex 2010/08/24  (rcs-revision 1.4)
+\pgfmatrixcurrentrow=\count103
+\pgfmatrixcurrentcolumn=\count104
+\pgf@matrix@numberofcolumns=\count105
+)
+\tikz@expandcount=\count106
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v2.10 (rcs-revision 1.2)
+)))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibrarycalc.code.tex
+File: tikzlibrarycalc.code.tex 2009/09/04 v2.10 (rcs-revision 1.6)
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.code.tex
+File: tikzlibraryshapes.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.geometric.code.tex
+File: tikzlibraryshapes.geometric.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.geometric.code.tex
+File: pgflibraryshapes.geometric.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.misc.code.tex
+File: tikzlibraryshapes.misc.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.misc.code.tex
+File: pgflibraryshapes.misc.code.tex 2008/10/07 v2.10 (rcs-revision 1.3)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.symbols.code.tex
+File: tikzlibraryshapes.symbols.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.symbols.code.tex
+File: pgflibraryshapes.symbols.code.tex 2009/10/27 v2.10 (rcs-revision 1.3)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.arrows.code.tex
+File: tikzlibraryshapes.arrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.arrows.code.tex
+File: pgflibraryshapes.arrows.code.tex 2008/06/26 v2.10 (rcs-revision 1.1)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.callouts.code.tex
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.callouts.code.tex))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryshapes.multipart.code.tex
+File: tikzlibraryshapes.multipart.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/shape
+s/pgflibraryshapes.multipart.code.tex
+File: pgflibraryshapes.multipart.code.tex 2010/01/07 v2.10 (rcs-revision 1.2)
+\pgfnodepartlowerbox=\box35
+\pgfnodeparttwobox=\box36
+\pgfnodepartthreebox=\box37
+\pgfnodepartfourbox=\box38
+\pgfnodeparttwentybox=\box39
+\pgfnodepartnineteenbox=\box40
+\pgfnodeparteighteenbox=\box41
+\pgfnodepartseventeenbox=\box42
+\pgfnodepartsixteenbox=\box43
+\pgfnodepartfifteenbox=\box44
+\pgfnodepartfourteenbox=\box45
+\pgfnodepartthirteenbox=\box46
+\pgfnodeparttwelvebox=\box47
+\pgfnodepartelevenbox=\box48
+\pgfnodeparttenbox=\box49
+\pgfnodepartninebox=\box50
+\pgfnodeparteightbox=\box51
+\pgfnodepartsevenbox=\box52
+\pgfnodepartsixbox=\box53
+\pgfnodepartfivebox=\box54
+)))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/libraries/pgfli
+braryarrows.code.tex
+File: pgflibraryarrows.code.tex 2008/10/27 v2.10 (rcs-revision 1.9)
+\arrowsize=\dimen150
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/pgf/frontendlayer/t
+ikz/libraries/tikzlibrarypositioning.code.tex
+File: tikzlibrarypositioning.code.tex 2008/10/06 v2.10 (rcs-revision 1.7)
+) (./fig1.aux)
+\openout1 = `fig1.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count107
+\scratchdimen=\dimen151
+\scratchbox=\box55
+\nofMPsegments=\count108
+\nofMParguments=\count109
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count110
+\MPscratchDim=\dimen152
+\MPnumerator=\count111
+\makeMPintoPDFobject=\count112
+\everyMPtoPDFconversion=\toks28
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/pdftexcmds
+.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/ifluatex.s
+ty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/oberdiek/epstopdf-bas
+e.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/kvdefineke
+ys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/oberdiek/kvoptions.st
+y
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/kvsetkeys.
+sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/generic/oberdiek/etexcmds.s
+ty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/nfs/software/rg/el6.3/texlive/2012/texmf-dist/tex/latex/latexconfig/epstopdf-
+sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+)) ABD: EveryShipout initializing macros
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 57.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 57.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 57.
+
+Overfull \hbox (101.16815pt too wide) in paragraph at lines 58--59
+[][] 
+ []
+
+[1
+
+{/nfs/software/rg/el6.3/texlive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.m
+ap}] (./fig1.aux) ) 
+Here is how much of TeX's memory you used:
+ 12025 strings out of 493481
+ 253823 string characters out of 3135826
+ 332503 words of memory out of 3000000
+ 15090 multiletter control sequences out of 15000+200000
+ 6097 words of font info for 23 fonts, out of 3000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 56i,6n,61p,440b,621s stack positions out of 5000i,500n,10000p,200000b,50000s
+</nfs/software/rg/el6.3/texlive/2012/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmitt10.pfb></nfs/software/rg/el6.3/texlive/2012/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr8.pfb></nfs/software/rg/el6.3/texlive/2012/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
+Output written on fig1.pdf (1 page, 32088 bytes).
+PDF statistics:
+ 23 PDF objects out of 1000 (max. 8388607)
+ 16 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 13 words of extra memory for PDF output out of 10000 (max. 10000000)
+

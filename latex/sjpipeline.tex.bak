@@ -1,0 +1,371 @@
+\documentclass{article}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{lscape}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{hyperref}
+
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{calc, shapes, arrows, positioning}
+
+\DeclareMathOperator{\SJ}{SJ}
+
+\renewcommand{\baselinestretch}{1.1}
+\newcommand{\prog}[1]{{\tt\em #1}}
+
+\begin{document}
+\title{Splicing Analysis and Quantification Pipeline}
+\author{Dmitri D. Pervouchine}
+\date{\today}
+\maketitle
+
+\tableofcontents
+
+\section{Overview}
+This document contains a full description of main processing steps of splicing analysis and quantification pipelines. 
+There are at least two such independent pipelines, abbreviated here as SJPIPE and TXPIPE. 
+
+The SJPIPE pipeline implements the quantification of splicing events by directly analysing the alignments in BAM files 
+(Figure~\ref{fig::sjpipe}). The BAM file is read by \prog{sjcount} utility to produce a tab delimited output of SJ 
+counts with offsets and , additionaly, counts of the continuous reads that overlap splice junctions (explained below). 
+This output is then aggregated (\prog{aggregate.pl}), matched against genome and annotation (\prog{annotate.pl}), and 
+passed to strand disambiguation (\prog{choose\_strand.pl}). The resulting stranded counts are then subject to the 
+irreproducibility assessment (\prog{npIDR}) and filtering (\prog{filter}). Importantly, this pipeline is designed to 
+work uniformely with
+\begin{itemize}
+\item standed and unstranded sequencing protocols
+\item bata with and without bioreplicates
+\end{itemize}
+
+The TXPIPE pipeline implements the quantification of annotated splicing events by analysing transcript quantification 
+data.
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{latex/fig1_crop.pdf}
+\caption{The SJPIPE pipeline.\label{fig::sjpipe}}
+\end{figure}
+
+
+\section{Detailed description of the components}
+
+\subsection{Pipeline generator}
+The \prog{sjpipe.pl} utility takes as an input an index file and outputs to the standard output a makefile to be executed to run the pipeline.
+\begin{verbatim} 
+sjpipe.pl -dir <dirname> -param <params> -by <attribute> -margin 
+          <length> -annot <gtf> -genome <name> -merge <name>
+Inputs: -dir, the name of the directory to store the data
+	-param, parameters passed to sjcount
+	-margin, margin to pass to aggregate, default=5
+	-annot, (preprocessed) annotation (gtf)
+	-genome, the genome (without .dbx or .idx)
+	-entropy, entropy threshold, default=3
+	-idr, IDR threshold, default=0.1
+	-by, the field by which to group in IDR
+	-merge, name of the file for master tables
+	STDIN:  a UCSC index file 
+Output: STDOUT: a GNU MAKE makefile, to be execute with  
+	make -f file.mk all
+\end{verbatim} 
+
+For example, the command
+\begin{verbatim}
+sjpipe.pl -dir data/human/ -param '-read1 0 -read2 0' -margin 4 
+          -annot hg19v10.gtf -genome genome/homSap19 
+          -merge output < index.txt > pipeline.mk
+\end{verbatim}
+creates a file 'pipeline.mk' based on the input from 'index.txt', where all the intermediate steps will be stored in 'data/human/' (needs to 
+created beforehand), with the annotation file hg19v10.gtf in the curremt directory, and with genome/homSap19.idx and genome/homSap19.dbx both 
+readable files. The master tables will be named data/human/output*.tsv
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Pre-processing}
+
+\subsubsection{Annotation pre-processing}
+\label{sec::preprocessing}
+
+Genomic annotation files usually come in gtf format and contain many feature types. Often these are large files and it takes time to read such a file. 
+Sometimes they may be incomplete (e.g. contain exons, but not introns). The \prog{transcript\_elements.pl} utility reads such a gtf, extracts only
+exons and transcript identifiers, to which these exons belong, and outputs a shorter form of gtf which contains (1) exons and (2) introns calculated 
+based on the exon information. The format of the output is also gtf, where in the last column (column 9), the 'belongsto' attribute lists the transcripts 
+to which given exon or intron belongs. For example, in the input gtf were
+\begin{verbatim} 
+...   ...     ...  ... ... . . . ...      
+chr2L FlyBase exon 100 200 . + . gene_id "8"; transcript_id "1";
+chr2L FlyBase exon 300 400 . + . gene_id "8"; transcript_id "1"; 
+chr2L FlyBase exon 500 600 . + . gene_id "8"; transcript_id "1"; 
+chr2L FlyBase exon 100 200 . + . gene_id "8"; transcript_id "2"; 
+chr2L FlyBase exon 500 600 . + . gene_id "8"; transcript_id "2"; 
+...   ...     ...  ... ... . . . ...
+\end{verbatim}
+then the pre-processed, shorter form would have been
+\begin{verbatim} 
+chr2L SJPIPE  intron   200 500 . + belongsto "2";
+chr2L SJPIPE  exon     500 600 . + belongsto "1,2";
+chr2L SJPIPE  exon     300 400 . + belongsto "1";
+chr2L SJPIPE  intron   200 300 . + belongsto "1";
+chr2L SJPIPE  exon     100 200 . + belongsto "1,2";
+chr2L SJPIPE  intron   400 500 . + belongsto "1";
+\end{verbatim}
+Note that transcripts and introns are not shown in the input gtf. The information contained in the 'belongsto' field will be used only in 
+TXPIPE pipeline to compute splicing indices from transcript quantification (see section~\ref{sec::txpipe}).
+
+%%%%%%%%%%%%%
+
+\subsubsection{Genome pre-processing}
+The following two utilities, \prog{transf} and \prog{getsegm}, which belong to the \prog{maptools} package, are used to pre-process genomes in a more compact and
+readable form. \prog{maptools} can be obtained from \href{https://github.com/pervouchine/maptools}{github}. The scripts in maptools/bin shall be made accessible
+by declaring the path to that directory.
+
+The use of \prog{transf} utility is as follows
+\begin{verbatim} 
+transf  -dir genome_directory/anyfile.fa  -dbx output.dbx -idx output.idx
+\end{verbatim}
+
+It takes all the files in \prog{genome\_directory/} and creates two output files, \prog{output.dbx} and \prog{output.idx}; the former storing the data and the latter 
+storing the index table tot hat data. The format is similar to 2bit. 
+
+The \prog{getsegm} doesn't have to run on its own. Instead, it is used in \prog{annotate.pl} to get genomic nucleotides.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{SJPIPE pipeline}
+
+\subsubsection{Counting splice junctions and reads that overlap splice sites}
+The \prog{sjcount} (v.2.14) utility counts the number of split reads supporting splice junctions (SJ) and continuous reads that overlap splice sites (SS) in a BAM file.
+Splice sites are defined by the splice junctions that are present among the alignments. The utility returns the number of counts for each combination of chromosome, begin, 
+end, strand, and offset, where offset is defined to be the position (within the short read sequence) of the last nucleotide preceeding the splice junction. 
+For the exact definitions of SJ, SS, offset, and examples see the help page of \prog{sjcount2} at \href{https://github.com/pervouchine/sjcount}{github}. 
+
+Regarding continuous reads that overlap splice sites, the currect convention is that only the full match ('M' in CIGAR string) is counted as overlapping a splice site 
+(this is needed to get the correct offset). See also \prog{sjcount2} (beta-testing).
+\begin{verbatim}
+sjcount -bam <file> -ssj <file> -ssc <file> ...
+Input:  a sorted BAM file with a header
+Output: -ssj, splice junction counts, and -ssc, splice site counts 
+Options:
+	-read1 0/1, reverse complement read1 no/yes (default=1)
+	-read2 0/1, reverse complement read2 no/yes (default=0)
+	-nbins number of bins for offsets, (default=1), i.e., read length
+	-unstranded, force strand=0
+	-quiet, suppress verbose output
+
+Output columns are: chr, begin, end, strand, offset, count, e.g.
+chr1    100     200     -      10      25
+chr1    100     200     -      11      12
+...     ...     ...     ...     ...     ...
+In the ssc file begin=end=position of splice site
+\end{verbatim}
+{\bf NB: the coordinates are 1-based}
+
+%%%%%%%%%%%%%
+
+\subsubsection{Aggregating SJ counts over offsets}
+The \prog{aggregate.pl} utility takes the output of \prog{sjcount} and performs aggregation by the 5th column (offset) using three different aggregation functtions 
+(see examples below). It outputs a BED6+3 file with three extra columns being (7) total count, (8) staggered read count, (9) entropy. The output is sent to \prog{stdout}. 
+\begin{verbatim}
+aggregate.pl -tsv <file>  ...
+Input:	TSV file (ssj or ssc), the output of sjcount
+Output:	BED6+3
+Options:
+	-maxintron, max intron length, default=0
+        -minintron, min intron length, default=0
+        -readLength, the read length, default=0
+        -margin, the margin for offset, default=0
+
+Columns in the output are: chr, begin, end, name, score, strand, 
+	count, staggered, entropy
+\end{verbatim}
+It is possible to exclude short reads with small overhangs on either side by using -margin and -readLength parameters. This is particularly important when such a margin 
+was imposed during the mapping step, but in order to be comparable when counting reads that overlap splice sites one should use the same restriction. Also, it is possible 
+to exclude SJs that are too long or too short (-minintron/-maxintron).
+
+The aggregation functions are applied to the sample $\{x_k\}$ of counts for each combination of chromosome, begin, end, and strand vs. the offset value $k$. 
+The aggregation function therefore has the general form $f(x_1,\dots,x_n)$. 
+
+When $f(x_1,\dots,x_n) = x_1+\dots+x_n$, the result coincides with the collapsed (total) number of counts, i.e., as if offsets were ignored.
+For for $f(x_1,\dots,x_n) = \theta(x_1)+\dots+\theta(x_n)$, where $\theta(x)=1$ for $x>0$ and $\theta(x)=0$ for $x\le0$, the result is the 
+number of {\em staggered} read counts. The function 
+$$f(x_1,\dots,x_n) = \log_2(\sum\limits_{i=1}^nx_i) - \frac{\sum\limits_{i=1}^nx_i\log_2(x_i)}{\sum\limits_{i=1}^nx_i}$$ 
+gives the entropy of the distribution, which can be used later to filter out non-uniform distiburtion of read counts. The score (field number 5 of BED) is 
+defined to be $\min\{100*\log_2(total), 1000\}$. For example, if the input were
+\begin{verbatim}
+chr1     50     90      +      20      5
+chr1    100     200     -      10      25
+chr1    100     200     -      11      12
+chr1    100     200     -      15      4
+chr1    100     200     +      10      1
+chr1    100     300     +      11      12
+\end{verbatim}
+the output would have been
+\begin{verbatim}
+...     ...     ...     ...    ...     ...     ...     ...     ...
+chr1    100     200     .      536     -       41      3       1.28
+...     ...     ...     ...    ...     ...     ...     ...     ...
+\end{verbatim}
+where $536=100*\log_2(41)$ and $1.28$ is the entropy of the distribution.
+
+{\bf Note: coordinated in BED are currently 1-based}.
+
+%%%%%%%%%%%%%%%
+
+\subsubsection{Checking the annotation status of a SJ and retrieving splice site nucleotides}
+\label{sec::annotation_status}
+The \prog{annotate.pl} takes an aggregated BED6+3 file (i.e., the output of \prog{aggregate.pl}), the genomic annotation, and the genome, and outputs BED6+5 
+with two more columns: (10) the annotation status and (11) splice sites. The output is sent to \prog{stdout}.
+\begin{verbatim}
+annotate.pl -bed <file> -annot <file> -idx <file> -dbx <dbx>
+Input:  BED file (the output of aggregate.pl)
+	annotation (gtf), a pre-processed genomic annotation (gtf)
+	genome (-idx and -dbx), see maptools package
+\end{verbatim}
+The annotation file is a simplified, processed form of the standard annotation gtf. It can be obtained by the \prog{transcript\_elements.pl} utility (see section~\ref{sec::preprocessing}).
+The genome consists of two compressed files, *.dbx and *.idx, which can be obtained from the genomic fasta sequence by using \prog{transf} utility of the \prog{maptools} package. 
+
+The annotation status is defined numerically as follows:
+\begin{enumerate}
+\item[0] None of the splice sites of the given SJ is annotated;
+\item[1] One of the splice sites of the given SJ is annotated, and the other is not;
+\item[2] Both splice sites of the given SJ are annotated but the intron between them is not;
+\item[3] Both splice sites of the given SJ are annotated, and so is the intron between them.
+\end{enumerate}
+
+The splice site nucleotides are the four intronic nucleotides, two flanking ones from each end, such as GTAG or ATAC. Since for this field and for the annotation status strand 
+has to be defined, two lines are produced in the case of unstranded data (one for each strand). For instance, if the input were
+\begin{verbatim}
+...    ...   ...   ...   ...    ...   ...   ...   ...
+chr1   100   200   .     536    +     41    3     1.28
+chr1   100   200   .     536    -     41    3     1.28
+...    ...   ...   ...   ...    ...   ...   ...   ...
+\end{verbatim}
+and there were, indeed, an annotated junction at (chr1, 100, 200, --) with GTAG, then the output would have been
+\begin{verbatim}
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+chr1   100   200   .     536    +     41    3     1.28   0     CTAC
+chr1   100   200   .     536    -     41    3     1.28   3     GTAG
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+\end{verbatim}
+
+Note that sequence retriever uses the \prog{getsegm} program of the \prog{maptools} package, so maptools has to be installed and path has to be added.
+
+%%%%%%%%%%%%%%%
+
+\subsubsection{Strand choice}
+At this step, a unique value of strand is chosen for each SJ. This is done by \prog{choose\_strand.pl} utility. 
+\begin{verbatim}
+choose_strand.pl -bed <file>
+\end{verbatim}
+For each combination of chromosome, begin, and end, the strand with greater annotation status (see section~\ref{sec::annotation_status}) is chosen. In case of 
+a tie (usually $0$ on both strands), the strand is chosen based on the ``largest'' splice site nucleotides in terms of lexicographic order (TTTT$>$GTAG$>\dots$).
+There will be an option to choose a custom order of trustable splice site sequences (e.g., GTAG$>$ATAC$>$others).
+
+For instance, if the input were
+\begin{verbatim}
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+chr1   100   200   .     536    +     41    3     1.28   0     CTAC
+chr1   100   200   .     536    -     41    3     1.28   3     GTAG
+chr1   150   200   .     439    +     21    2     1.01   0     GTAG
+chr1   150   200   .     439    -     21    2     1.01   0     CTAC
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+\end{verbatim}
+the output would have been 
+\begin{verbatim}
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+chr1   100   200   .     536    -     41    3     1.28   3     GTAG
+chr1   150   200   .     439    +     21    2     1.01   0     GTAG
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+\end{verbatim}
+
+%%%%%%%%%%%%%%%
+
+\subsubsection{Constraining splice site sounts}
+Since now a unique value of strand is chosen for each SJ, the counts of reads overlapping splice sites have to be constrained to a smaller set of splcie sites.
+This is done by \prog{constrain\_ssc.pl} utility.
+\begin{verbatim}
+constrain_ssc.pl -ssj <file> -ssc <file> 
+\end{verbatim}
+Here -ssj is the BED file after strand choice was made, -ssc is the output of \prog{sjcount}. The output of \prog{constrain\_ssc.pl}is sent to \prog{stdout}. 
+If the ssc input is unstranded, then the strand of a splice site is taken from ssj, where the strand is already defined. In some cases it will lead to two 
+lines being produced in the case of unstranded data (one for each strand). For example, if the ssj input were
+\begin{verbatim}
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+chr1   100   200   .     536    -     41    3     1.28   3     GTAG
+chr1   150   200   .     439    +     21    2     1.01   0     GTAG
+...    ...   ...   ...   ...    ...   ...   ...   ...    ...   ...
+\end{verbatim}
+then (chr1, 200, +) and (chr1, 200, --) are both valid splice sites and the corresponding ssc counts will be reported for each of the two strands.
+
+\subsection{Ascertainment of reproducibility (IDR)}
+In this step the number of counts from (generally, as many as possible) bioreplicates are assessed for irreproducibility. This step is done by \prog{idr4sj.r}
+\begin{verbatim}
+Rscript R/idr4sj.r inp1.bed [inp2.bed] ... [inpN.bed] output.bed
+\end{verbatim}
+where inp1,2,...N the bioreplicates and output is the file is the last in the command line. The output contains one extra column (12) equal to IDR score.
+Columns 7, 8, and 9 are summed (not averaged!) between bioreplicates. 
+In case if only one input file, the IDR score is set to 0. Currently, in case of more than two bioreplicates, only the first two files will be considered (others ignored).
+
+%%%%%%%%%%%%%%%
+
+\subsubsection{Filtering}
+
+There is no specific routine for filtering because it can be done by \prog{awk} by requiring column 9 (entropy)
+to be greater than threshold (usually, 3 bits) and the column 12 (IDR) be not greater than 0.1.
+
+%%%%%%%%%%%%%
+
+\subsubsection{Calculation of splicing indices}
+As soon as the SJ (and splice site) counts were assessed for reproducibility and filtered, the next step is to compute the inclusion and processing rates by \prog{zeta.pl} utility.
+The inclusion and processing rates can be defined for exons and for introns and exist under different names~\cite{pmid23172860}. Since, by definition, splice junctions 
+know nothing about the set of exons that one might want to assess, the  global exon inclusion and processing rates are computed for for a given set of 
+annotated exons, as specified in the annotation file. In contrast, the inclusion and processing rates of SJ are computed for all splice junctions that remain
+intact after fitering, but also the annotated SJ are also assessed and reported.
+
+\begin{verbatim}
+zeta.pl -ssj <file> -ssc <file> -annot <gtf>
+Inputs:	-ssj and -ssc = SJ and SS counts in column 7;
+	-annot, the annotation (gtf) with exons and introns
+Options:
+	-mincount = min denominator (will produce NA 
+         if smaller than this value)
+	-stranded = 1(yes) or 0(no), default=1
+\end{verbatim}
+Here, whenever a ratio is calculated, we usually relate inclusion quantity to the sum of inclusion and exclusion quantities. The latter, however, can be a 
+small integer number and, therefore, a threshold is needed to cut off estimates with large standard errors. This threshold is -mincount. There is also an option 
+to enforce strandless computation, but it will be deprecated in future versions.
+
+The procedure of \prog{zeta.pl} is to read and to index all SJs and then for each splice site to create a list of exons which start or end at the given splice site. 
+Then, reading sequentially the count file, the program increments the counters for exon inclusion, exon exclusion, and also for SJ usage. The output is a GFF with 
+the coresponding features, e.g.
+\begin{verbatim}
+chr1 SJPIPE exon   15 87 10 - . cosi "0.93962"; exc "0"; inc "747"; 
+                                psi "1"; ret "48";
+chr1 SJPIPE intron 65 67 83 - . cosi3 "1"; cosi5 "1"; nA "0"; nD "0"; 
+                                nDA "22"; nDX "232"; nXA "253"; 
+                                psi3 "0.08"; psi5 "0.08661";
+\end{verbatim}
+where psi and cosi are exon percent-spliced-in and completeness of splicing rates; psi5, psi3, cosi5, cosi3 
+are the respective percent-spliced-in and completeness of splicing indices of an intron, measured from the 
+5'-end and from the 3'-end. The rest of the parameters are counts.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{TXPIPE pipeline}
+\label{sec::txpipe}
+\subsubsection{Computation of splicing indices from transcript quantification data}
+\prog{tx.pl}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Master tables and endpoints}
+
+\bibliographystyle{plain}
+\bibliography{sjpipeline}
+
+
+\end{document}
+
