@@ -57,7 +57,7 @@ To install, do
 
 An example of a pipeline buildout is available by running
 
-	make -f example.mk all
+	make run 
 
 * DOCUMENTATION 
 
