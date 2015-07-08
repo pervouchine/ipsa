@@ -78,17 +78,8 @@ while($line=<FILE>) {
 
 	make(script=>"awk", before=>"'\$\$4>=$entropy && \$\$5>=$status'", input=>{''=>fn($name,A04,ssj,tsv)}, output=>{'>'=>fn($name,F04,ssj,tsv)}, endpoint=>F04);
 
-        make(script=>"awk '\$\$2>=2'", input=>{''=>fn($name,A01,ssj,tsv)}, output=>{'>'=>fn($name,D01,tsv)}, between=>"| perl Perl/agg.pl -", endpoint=>D01);
-	make(script=>"constrain_mult.pl", input=>{-ssj=>fn($name,A04,ssj,tsv), '<'=>fn($name,D01,tsv)}, output=>{'>'=>fn($name,D02,tsv)}, endpoint=>D02);
-	make(script=>"extract_mex.pl", input=>{'<'=>fn($name,D02,tsv)}, output=>{'>'=>fn($name,D03,tsv)}, endpoint=>D03);
-
         push @{$IDR{$grp}{ssj}}, fn($name,A04,ssj,tsv);
 	push @{$IDR{$grp}{ssc}}, fn($name,A04,ssc,tsv);
-	push @{$IDR{$grp}{mex}}, fn($name,D03,tsv);
-    }
-
-    if($attr{'type'} eq "gff" || $attr{'type'} eq "gtf") { 
-        make(script=>"tx.pl", input=>{-quant=>$file, -annot=>$annot}, output=>{'>'=>fn($grp,C07,gff)}, endpoint=>C07);
     }
 }
 close FILE;
@@ -96,7 +87,6 @@ close FILE;
 foreach $grp(keys(%IDR)) {
     make(script=>"idr4sj.pl", input=>{''=>join(" ", @{$IDR{$grp}{ssj}})}, output=>{'>'=>fn($grp,A05,ssj,tsv)}, endpoint=>A05);
     make(script=>"idr4sj.pl", input=>{''=>join(" ", @{$IDR{$grp}{ssc}})}, output=>{'>'=>fn($grp,A05,ssc,tsv)}, endpoint=>A05);
-    make(script=>"idr4sj.pl", input=>{''=>join(" ", @{$IDR{$grp}{mex}})}, output=>{'>'=>fn($grp,D06,tsv)}, endpoint=>D06);
 
     make(script=>"awk", before=>"'\$\$4>=$entropy && \$\$5>=$status && \$\$7<$idr'", input=>{''=>fn($grp,A05,ssj,tsv)}, output=>{'>'=>fn($grp,A06,ssj,tsv)}, endpoint=>A06);
     make(script=>"awk", before=>"'\$\$4>=$entropy && \$\$7<$idr'", input=>{''=>fn($grp,A05,ssc,tsv)}, output=>{'>'=>fn($grp,A06,ssc,tsv)}, endpoint=>A06);
@@ -106,23 +96,22 @@ foreach $grp(keys(%IDR)) {
 
     $prm = "-mincount $mincount";
     make(script=>"zeta.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -ssc=>fn($grp,A06,ssc,tsv), -annot=>$annot}, output=>{'>'=>fn($grp,A07,gff)}, between=>$prm, endpoint=>A07);
-    make(script=>"zeta.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -ssc=>fn($grp,A06,ssc,tsv), -exons=>fn($grp,D06,tsv)}, output=>{'>'=>fn($grp,D07,gff)}, between=>$prm, endpoint=>D07);
     make(script=>"psicas.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($grp,B07,gff)}, endpoint=>B07);
 }
 
 #######################################################################################################################################################################
 
-print "all :: A07 D07\n";
+print "all :: A\n";
 
-foreach $x([psi, cosi, A07, exon], [psi5, psi3, A07, intron], [cosi5, cosi3, A07, intron], [psi, cosi, D07, exon]) {
+foreach $x([psi, cosi, A07, exon], [psi5, psi3, A07, intron], [cosi5, cosi3, A07, intron]) {
     ($one, $two, $l, $f) = @{$x};
     make2(script=>'merge_large_gff.pl', inputs=>{'<'=>{''=>$in}}, before=>"-ext .$l.gff -group $group -dir $dir$l/ -f $f $other", 
 	 outputs=>{-out=>{$one=>fn($merge,$one,$l,tsv),$two=>fn($merge,$two,$l,tsv)}}, endpoint=>master);
 }
 
+
 make(script=>'merge_large_tsv.pl', input=>{'<'=>$in}, before=>"-ext .A06.ssj.tsv -group $group -dir $dir"."A06/ $other", output=>{'>'=>fn($merge,counts,ssj,tsv)}, endpoint=>master);
 make(script=>'merge_large_tsv.pl', input=>{'<'=>$in}, before=>"-ext .A06.ssc.tsv -group $group -dir $dir"."A06/ $other", output=>{'>'=>fn($merge,counts,ssc,tsv)}, endpoint=>master);
-make(script=>'merge_large_tsv.pl', input=>{'<'=>$in}, before=>"-ext .D06.tsv -group $group -dir $dir"."D06/ $other", output=>{'>'=>fn($merge,D06,tsv)}, endpoint=>master);
 
 make2(script=>"mk_stat_large.pl",   inputs=>{'<'=>{''=>$in}}, before=>"-ext .A06.ssj.tsv -group $group -dir $dir"."A06/", outputs=>{-out=>{'>'=>fn($merge,stats,tsv)}}, endpoint=>stats);
 make(script=>"mk_stat.r", input=>{-i=>fn($merge,stats,tsv)}, output=>{-o=>fn($merge,stats,pdf)}, endpoint=>stats);
