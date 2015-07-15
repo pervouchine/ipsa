@@ -23,48 +23,36 @@
 \title{IPSA: Integrative Pipeline for Splicing Analysis}
 \author{Dmitri D. Pervouchine\thanks{email: dp@crg.eu}}\affil{Centre for Genomic Regulation (CRG), Barcelona, Spain}
 
-\date{\today\\\hl{\bf NOTE THIS DOCUMENT IS SUBSTANTIALLY OUT OF DATE}}
 \maketitle
 \tableofcontents
 
 \section{Synopsis}
-This document contains the description of the integrative splicing analysis pipeline. The integrative pipeline
-consists of several sub-pipelines, of which we primarily discuss SJPIPE and TXPIPE.
-
-SJPIPE implements the quantification of splicing events by directly analyzing split alignments 
-in BAM files (Figure~\ref{fig::sjpipe}). The advantage of SJPIPE is that it quantifies annotated 
-as well as novel splice junctions and that there is no annotation-related interference between 
+This document contains the description of IPSA, an integrative splicing analysis pipeline. 
+It quantifies splicing events by directly analyzing split alignments in BAM files. 
+The advantage of IPSA is that it quantifies annotated splice junctions as well as novel ones and that there is no annotation-related interference between 
 independent splicing events. An obvious disadvantage, however, is that only a part of the 
-sequencing information is being used, one that is related to local alignments at splice junctions, 
-while the reads that are fully contained in exons or in introns are ignored.
+sequencing information is being used, one that comes from local alignments at splice junctions, 
+while the reads that are fully contained in exons or in introns are  being ignored.
 
-SJPIPE pipeline starts with a BAM file, which is processed by \prog{sjcount} utility and converted to a tab-delimited 
-output of {\em multi-split counts with offsets} (see \href{https://github.com/pervouchine/sjcount}{sjcount} documentation 
-for more detail). Additionally, \prog{sjcount} produces counts of the continuous reads that overlap splice junctions.
+The pipeline starts with a BAM file, which is processed by \prog{sjcount} utility and converted to a tab-delimited 
+output of SJ-read counts with offsets (see \href{https://github.com/pervouchine/sjcount}{sjcount} documentation 
+for more detail). Additionally, \prog{sjcount} produces counts of the continuous reads that overlap splice junctions (SS-reads).
 These outputs are aggregated, matched against genome and annotation, and passed to strand disambiguation.
 The resulting stranded counts are subject to irreproducibility assessment (npIDR) and subsequent filtering 
-based on IDR, entropy, and staggered alignments. The workflow is unversal for many types of data, i.e., for stranded 
+based on IDR, entropy, and staggered alignments. This workflow is unversal for many types of data, i.e., for stranded 
 and unstranded data, for data with and without bioreplicates, etc.
 
-The TXPIPE pipeline assesses the annotated splicing events by analyzing the transcript quantification data produced 
-by some deconvolution program. The advantage of this approach is that it takes into account all sequencing data, i.e., 
-not only local alignments at splice junctions, but also alignments of reads in exons and in introns. This results in 
-a larger effective sample size compared to that in SJPIPE. A disadvantage, however, is that unannotated splicing events
-or dependent splicing events may distort the global splicing pattern significantly and, therefore, there is no guarantee 
-that the inclusion rate of each given exon actually reflects splicing events that occur with the given exon (see examples 
-below).
-
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{fig1_crop.pdf}
-\caption{The SJPIPE pipeline.\label{fig::sjpipe}}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{fig1_crop.pdf}
+%\caption{The IPSA pipeline.\label{fig::sjpipe}}
+%\end{figure}
 
 
 \section{Detailed description of the components}
-\subsection{RNA dashboard index file}
-An RNA dashboard index file is a two-column tab-delimited text file whose first column contains the file name or a URL, and the second column contains a list of attributes of the form
-{\tt attribute1=value1; attribute2=value2;} etc. 
+\subsection{Data index file}
+Data index file is a two-column tab-delimited file, which is supplied as an input and  whose first column contains the file name or a URL, 
+and the second column contains a list of attributes of the form {\tt attribute1="value1"; attribute2="value2";}. 
 
 \subsection{Pipeline generator}
 The \prog{make.pl} utility takes as an input the RNA dashboard index file and outputs to the standard output a {\em GNU} makefile that 
@@ -73,20 +61,20 @@ will be executed in order to to run the pipeline.
 Perl/make.pl -dir <dirname> -param <params> -by <attribute> -margin 
           <length> -annot <gtf> -genome <name> -merge <name>
 Inputs: -annot ..., the annotation (gtf), obligatory
-	-deltaSS ..., distance threshold for splice sites, default=0
-	-block ..., the blocking field for mastertable
-	-dir ..., the output directory, obligatory
-	-entropy ..., entropy lower threshold, default=1.5
-	-genome ..., the genome (without .dbx or .idx), obligatory
-	-group ..., the grouping field for IDR, obligatory
-	-idr ..., IDR upper threshold, default=0.1
-	-margin ..., margin for aggregate, default=5
-	-merge ..., the name of the output to merge in case if blocks are missing
-	-mincount ..., min number of counts for the denominator, default=10
-	-param ..., parameters passed to sjcount
-	-repository ..., the repository subdirectory for bam files
-	-status ..., annotation status lower threshold, default=0
-        STDIN:  an RNA dashboard index file 
+        -deltaSS ..., distance threshold for splice sites, default=10
+        -dir ..., the output directory, obligatory
+        -entropy ..., entropy lower threshold, default=1.5
+        -genome ..., the genome (without .dbx or .idx), obligatory
+        -group ..., the grouping field for IDR, default=labExpId
+        -idr ..., IDR upper threshold, default=0.1
+        -in ..., the index file, obligatory
+        -margin ..., margin for aggregate, default=5
+        -merge ..., the name of the output to merge if blocks are missing
+        -mincount ..., min number of counts for the denominator, default=10
+        -param ..., parameters passed to sjcount
+        -repository ..., the repository subdirectory for bam files
+        -smpid ..., sample id field, default=labExpId
+        -status ..., annotation status lower threshold, default=0
 Output: STDOUT: a GNU makefile
         make -f file.mk all
 \end{verbatim} 
@@ -94,7 +82,8 @@ Output: STDOUT: a GNU makefile
 For example, the command
 \begin{verbatim}
 Perl/make.pl -repository input/ -dir output/ -group idrGroup -param '-read1 0' 
-	-annot hg19v18.gff -genome homSap19 -merge pooled < example.dat > example.mk
+        -annot hg19v18.gff -genome homSap19 -merge pooled -in example.dat 
+         > example.mk
 \end{verbatim}
 creates a file called 'example.mk' based on the input from 'example.dat', where all the intermediate steps will be stored in 'output/' 
 with the annotation file hg19v18.gtf in the current directory, and with homSap19.idx and homSap19.dbx both being readable genome files.
@@ -102,11 +91,9 @@ with the annotation file hg19v18.gtf in the current directory, and with homSap19
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Pre-processing}
-
 \subsubsection{Annotation pre-processing}
 \label{sec::preprocessing}
-
-Genomic annotation files often come in GTF format and contain many feature types simultaneously. Often these are large files and it takes a lot of 
+Genome annotation files often come in GTF format and contain many feature types simultaneously. Often these are large files and it takes a lot of 
 time just to read them. Sometimes they may be incomplete (e.g. contain exons, but not introns) and not fully correspond to GFF3 standarts.
 
 The \prog{transcript\_elements.pl} utility reads a gtf, extracts only exons, and outputs for each exon the list of transcripts to which this exon 
@@ -130,22 +117,19 @@ chr2L SJPIPE  exon    300   400   .    +    transcript_id "1";
 chr2L SJPIPE  intron  400   500   .    +    transcript_id "1";
 chr2L SJPIPE  exon    500   600   .    +    transcript_id "1,2";
 \end{verbatim}
-Formally speaking, the script groups transcript id for each exon and applies the function {\em join(",",uniq(sort(...)))} to the sorted array of transcript ids. Similarly,
-the script can group any other feature and apply any other function to the array, as well as it can put any value for the source field, e.g.
+
+Formally speaking, the script groups transcript id for each exon and applies the function {\em join(",",uniq(sort(...)))} to the sorted array of transcript ids. 
+Similarly, the script can group any other feature and apply any other function to the array, as well as it can put any value for the source field, e.g.
 \begin{verbatim}
 Perl/transcript_elements.pl -features transcript_id,source,position:avg
 \end{verbatim}
 will return uniq(transcript\_id), uniq(source), and avg(position) in the column 9 of GTF. Note that transcripts and introns are not shown in the input gtf. 
-The information contained in the 'transcript\_id' field will be used only in TXPIPE pipeline to compute splicing indices from transcript quantification (see 
-section~\ref{sec::txpipe}).
 
 {\bf NB} In what follows, the processed annotation has to be sorted. Therefore it is necessary to pipe it with the sort step as follows.
 
 \begin{verbatim} 
 Perl/transcript_elements.pl - < input.gtf | sort -k1,1 -k4,5n > output.gff
 \end{verbatim}
-
-%%%%%%%%%%%%%
 
 \subsubsection{Genome pre-processing}
 The following two utilities, \prog{transf} and \prog{getsegm}, which belong to the \prog{maptools} package, are used to pre-process genomes in a more compact and
@@ -163,9 +147,7 @@ storing the index table tot hat data. The format is similar to 2bit.
 The \prog{getsegm} doesn't have to run on its own. Instead, it is used in \prog{annotate.pl} to get genomic nucleotides.
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{SJPIPE pipeline}
+\subsection{Main functions}
 
 \subsubsection{Counting splice junctions and reads that overlap splice sites}
 The \prog{sjcount} utility takes a  BAM file and counts the number of split reads supporting splice junctions (SJ) and continuous reads 
@@ -177,39 +159,42 @@ be the position (within the short read sequence) of the last nucleotide precedin
 offset, and examples see the help page of \prog{sjcount} at \href{https://github.com/pervouchine/sjcount}{github}. 
 
 \begin{verbatim}
-sjcount -bam <file> -ssj <file> -ssc <file> ...
+Usage: ./sjcount-3.1/sjcount -bam bam_file [-ssj junctions_output] 
+    [-ssc boundaries_output] [-log log_file] [-read1 0|1] [-read2 0|1] 
+    [-nbins number_of_bins] [-lim number_of_lines] [-quiet]
+sjcount v3.1
 Input:  a sorted BAM file with a header
 Options:
-	-read1 0/1, reverse complement read1 no/yes (default=1)
-	-read2 0/1, reverse complement read2 no/yes (default=0)
-	-nbins number of overhang bins, (default=1)
-	-maxnh, the max value of the NH tag, (default=none)
-	-lim nreads stop after nreads, (default=no limit)
-	-unstranded, force strand to be '.'
-	-continuous, no mismatches when overlapping splice boundaries
-	-gz, gzip output ('.gz' extension will *NOT* be added to output file name)
-	-quiet, suppress verbose output
+        -read1 0/1, reverse complement read1 no/yes (default=1)
+        -read2 0/1, reverse complement read2 no/yes (default=0)
+        -nbins number of offset bins, (default=1)
+        -maxnh, the max value of the NH tag, (default=none)
+        -lim nreads stop after nreads, (default=no limit)
+        -unstranded, force strand to be '.'
+        -continuous, no mismatches when overlapping splice boundaries
+        -quiet, suppress verbose output
 
-Output:	-ssj: Splice Junction counts, tab-delimited  (default=stdout)
-	Columns are: path, number_of_splits, offset, count
-	-ssc: Splice boundary counts, tab-delimited  (default=none)
-	Columns are: path, number_of_splits, offset, count
+Output: -ssj: Splice Junction counts, tab-delimited  (default=stdout)
+        Columns are: chr_begin_end_strand, n_splits, offset, count
+        -ssc: Splice boundary counts, tab-delimited  (default=none)
+        Columns are: chr_position_strand, 0, offset, count
 \end{verbatim}
 {\bf NB: the coordinates are 1-based}
 
 %%%%%%%%%%%%%
 
 \subsubsection{Aggregating SJ counts over offsets}
-The \prog{aggregate.pl} utility takes the output of \prog{sjcount} on STDIN and performs aggregation by the 5th column (offset) using three different aggregation functions 
-(see examples below). It outputs a TSV file with three extra columns being (5) total count, (6) staggered read count, (7) entropy. The output is sent to \prog{stdout}. 
+The \prog{aggregate.pl} utility takes the output of \prog{sjcount} on STDIN and performs aggregation by the 3rd column (offset) using three different aggregation functions 
+(see examples below). It outputs a TSV file with three extra columns: total count, staggered read count, and entropy. The output is sent to \prog{stdout}. 
 \begin{verbatim}
 Perl/aggregate.pl   
 Input:  TSV (ssj or ssc) on STDIN
 Output: TSV on STDOUT
-Options:
+Options:-logfile ..., name of the log file
         -margin ..., the margin for offset, default=0
-        -maxintron ..., max intron length, default=0
-        -minintron ..., min intron length, default=0
+        -maxintron ..., max intron length; only for 1-splits, default=0
+        -minintron ..., min intron length; only for 1-splits, default=4
+        -prefix ..., prefix in the chromosome name
         -readLength ..., the read length, default=0
 Columns in the output are: chr, begin, end, strand, 
         count, staggered, entropy
@@ -228,22 +213,25 @@ $$f(x_1,\dots,x_n) = \log_2(\sum\limits_{i=1}^nx_i) - \frac{\sum\limits_{i=1}^nx
 gives the entropy of the distribution, which can be used later to filter out non-uniform distiburtion of read counts. 
 For example, if the input were
 \begin{verbatim}
-chr1     50     90      +      20      5
-chr1    100     200     -      10      25
-chr1    100     200     -      11      12
-chr1    100     200     -      15      4
-chr1    100     200     +      10      1
-chr1    100     300     +      11      12
+chr1_50_90_+    1    20      5
+chr1_100_200_-  1    10      25
+chr1_100_200_-  1    11      12
+chr1_100_200_-  1    15      4
+chr1_100_200_+  1    10      1
+chr1_100_300_+  1    11      12
 \end{verbatim}
 the output would have been
 \begin{verbatim}
-...     ...     ...     ...     ...     ...     ...
-chr1    100     200     -       41      3       1.28
-...     ...     ...     ...     ...     ...     ...
+...             ...   ...     ...     ...
+chr1_100_200_-  1     41      3       1.28
+...             ...   ...     ...     ...
 \end{verbatim}
 where $1.28$ is the entropy of the distribution.
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection[Annotation status and splice site nucleotides]{Checking the annotation status of a SJ and retrieving splice site nucleotides}
 \label{sec::annotation_status}
@@ -251,11 +239,12 @@ The \prog{annotate.pl} takes an aggregated TSV file (the output of \prog{aggrega
 with two more columns: (8) the annotation status and (9) splice sites. The output is sent to \prog{stdout}.
 \begin{verbatim}
 Perl/annotate.pl
-Input:  -in TSV file (the output of aggregate.pl)
-        -annot ..., the annotation (gtf), obligatory
+Input:  -annot ..., the annotation (gtf), obligatory
         -dbx ..., the genome (dbx), obligatory
+        -deltaSS ..., distance threshold for splice sites, default=0
         -idx ..., the genome (idx), obligatory
-	-deltaSS ..., distance threshold for splice sites, default=0
+        -in ..., the input tsv file, obligatory
+        -logfile ..., name of the log file
 Outout: TSV on STDOUT
 \end{verbatim}
 The annotation file is a simplified, processed form of the standard annotation gtf. It can be obtained by the \prog{transcript\_elements.pl} utility (see section~\ref{sec::preprocessing}).
@@ -280,34 +269,33 @@ The status of a splice junction is defined according to the table (rows -- donor
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
- 	& 0 & 1 & 2\\
+         & 0 & 1 & 2\\
 \hline
- 	& not annot & within deltaSS & annotated\\
+         & not annot & within deltaSS & annotated\\
 \hline
-0	&0 	&0.5 	& 1\\
+0        &0         &0.5         & 1\\
 \hline
-1	&0.5 	&0.75 	& 1.5\\
+1        &0.5         &0.75         & 1.5\\
 \hline
-2	&1	&1.5	&2 or 3\\
+2        &1        &1.5        &2 or 3\\
 \hline
 \end{tabular}
 \end{center}
 
-
-The splice site nucleotides are the four intronic nucleotides, two flanking ones from each end, such as GTAG or ATAC. Since for this field and for the annotation status strand 
+The splice site nucleotides are the four intronic nucleotides, two flanking ones from each end such as GTAG or ATAC. Since for this field and for the annotation status strand 
 has to be defined, two lines are produced in the case of unstranded data (one for each strand). For instance, if the input were
 \begin{verbatim}
-...    ...   ...   ...   ...   ...   ...
-chr1   100   200   +     41    3     1.28
-chr1   100   200   -     41    3     1.28
-...    ...   ...   ...   ...   ...   ...
+...    ...   ...   ...   ...   ...
+chr1_100_200_+     41    3     1.28
+chr1_100_200_-     41    3     1.28
+...    ...   ...   ...   ...   ...
 \end{verbatim}
 and there were, indeed, an annotated junction at (chr1, 100, 200, --) with GTAG, then the output would have been
 \begin{verbatim}
-...    ...   ...   ...   ...   ...   ...    ...   ...
-chr1   100   200   +     41    3     1.28   0     CTAC
-chr1   100   200   -     41    3     1.28   3     GTAG
-...    ...   ...   ...   ...   ...   ...    ...   ...
+...    ...   ...   ...   ...   ...    ...   ...
+chr1_100_200_+     41    3     1.28   0     CTAC
+chr1_100_200_-     41    3     1.28   3     GTAG
+...    ...   ...   ...   ...   ...    ...   ...
 \end{verbatim}
 
 Note that sequence retriever uses the \prog{getsegm} program of the \prog{maptools} package, so maptools has to be installed and path has to be added.
@@ -321,8 +309,9 @@ Perl/choose_strand.pl
 Input:  TSV file on STDIN
 Output: TSV file on STDOUT
 Options:
-        -annot ..., annotation column, default=8
-        -sites ..., splice site column, default=9
+        -annot ..., annotation column, default=5
+        -logfile ..., name of the log file
+        -sites ..., splice site column, default=6
 \end{verbatim}
 For each combination of chromosome, begin, and end, the strand with greater annotation status (see section~\ref{sec::annotation_status}) is chosen. In case of 
 a tie (usually $0$ on both strands), the strand is chosen based on the ``largest'' splice site nucleotides in terms of lexicographic order (TTTT$>$GTAG$>\dots$).
@@ -330,19 +319,19 @@ There will be an option to choose a custom order of trustable splice site sequen
 
 For instance, if the input were
 \begin{verbatim}
-...    ...   ...   ...   ...   ...   ...    ...   ...
-chr1   100   200   +     41    3     1.28   0     CTAC
-chr1   100   200   -     41    3     1.28   3     GTAG
-chr1   150   200   +     21    2     1.01   0     GTAG
-chr1   150   200   -     21    2     1.01   0     CTAC
-...    ...   ...   ...   ...   ...   ...    ...   ...
+...    ...   ...   ...   ...   ...    ...   ...
+chr1_100_200_+     41    3     1.28   0     CTAC
+chr1_100_200_-     41    3     1.28   3     GTAG
+chr1_150_200_+     21    2     1.01   0     GTAG
+chr1_150_200_-     21    2     1.01   0     CTAC
+...    ...   ...   ...   ...   ...    ...   ...
 \end{verbatim}
 the output would have been 
 \begin{verbatim}
-...    ...   ...   ...   ...   ...   ...    ...   ...
-chr1   100   200   -     41    3     1.28   3     GTAG
-chr1   150   200   +     21    2     1.01   0     GTAG
-...    ...   ...   ...   ...   ...   ...    ...   ...
+...    ...   ...   ...   ...   ...    ...   ...
+chr1_100_200_-     41    3     1.28   3     GTAG
+chr1_150_200_+     21    2     1.01   0     GTAG
+...    ...   ...   ...   ...   ...    ...   ...
 \end{verbatim}
 
 %%%%%%%%%%%%%%%
@@ -418,27 +407,6 @@ chr1 SJPIPE intron 65 67 83 - . cosi3 "1"; cosi5 "1"; nA "0"; nD "0";
 where psi and cosi are exon percent-spliced-in and completeness of splicing rates; psi5, psi3, cosi5, cosi3 
 are the respective percent-spliced-in and completeness of splicing indices of an intron, measured from the 
 5'-end and from the 3'-end. The rest of the parameters are counts.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\subsection{TXPIPE pipeline}
-\label{sec::txpipe}
-\subsubsection[Splicing indices from transcript quantification data]{Computation of splicing indices from transcript quantification data}
-
-The \prog{tx.pl} utility takes the transcript quantification data (gtf) and the pre-processed genomic annotation (the output of
-\prog{transcript\_elements.pl}). For each exon in the annotation it returns the sum of abundances of transcripts that contain 
-the given exon (as an exon, i.e., there is a line in the gtf file saying that the exon belongs to the transcript) as a fraction 
-of the sum of abundances of transcripts which cover the given exon (i.e., the transcript starts upstream and ends downstream of the 
-exon). Note that this definition doesn't require gene id at all.
-
-\begin{verbatim}
-Perl/tx.pl -annot <file> -quant <file>
-        -annot, the genomic annotation (gtf)
-        -quant, the transcript quantification file (gtf/gff)
-\end{verbatim}
-
-The transcript abundance is defined in the gtf field 9 as 'RPKM' attribute or as the mean of the two bioreplicates defined by
-'RPKM1' and 'RPKM2' attributes.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
