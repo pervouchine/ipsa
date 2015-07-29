@@ -72,15 +72,11 @@ while($line=<FILE>) {
 	make(script=>"awk '\$\$2==1'",input=>{''=>fn($name,A01,ssj,tsv)}, output=>{'>'=>fn($name,A02,ssj,tsv), -logfile=>fn($name,A02,ssj,'log')}, between=>"|perl Perl/agg.pl $prm", endpoint=>A02);
         make(script=>"awk '\$\$2==0'",input=>{''=>fn($name,A01,ssc,tsv)}, output=>{'>'=>fn($name,A02,ssc,tsv), -logfile=>fn($name,A02,ssc,'log')}, between=>"|perl Perl/agg.pl $prm", endpoint=>A02);
 
-
-	make(script=>"offset.r", input=>{-t=>fn($name,A02,ssj,'log')}, output=>{-p=>fn($name,A02,ssj,'pdf')}, endpoint=>QC1);
+	#make(script=>"offset.r", input=>{-t=>fn($name,A02,ssj,'log')}, output=>{-p=>fn($name,A02,ssj,'pdf')}, endpoint=>QC1);
 
 	make(script=>"annotate.pl", input=>{-in=>fn($name,A02,ssj,tsv), -annot=>$annot, -dbx=>"$genome.dbx", -idx=>"$genome.idx"}, output=>{'>'=>fn($name,A03,ssj,tsv)}, after=>"-deltaSS $deltaSS", endpoint=>A03);
 	make(script=>"choose_strand.pl", input=>{'<'=>fn($name,A03,ssj,tsv)}, output=>{'>'=>fn($name,A04,ssj,tsv), -logfile=>fn($name,A04,ssj,'log')}, before=>"-", endpoint=>A04);
 	make(script=>"constrain_ssc.pl", input=>{'<'=>fn($name,A02,ssc,tsv),-ssj=>fn($name,A04,ssj,tsv)}, output=>{'>'=>fn($name,A04,ssc,tsv)}, endpoint=>A04);	
-
-	make(script=>"awk", before=>"'\$\$4>=$entropy && \$\$5>=$status'", input=>{''=>fn($name,A04,ssj,tsv)}, output=>{'>'=>fn($name,F04,ssj,tsv)}, endpoint=>F04);
-	$merge_tsv{F}{fsj}{fn($name,F04,ssj,tsv)} = $smp;
 
         push @{$IDR{$grp}{ssj}}, fn($name,A04,ssj,tsv);
 	push @{$IDR{$grp}{ssc}}, fn($name,A04,ssc,tsv);
@@ -95,7 +91,6 @@ while($line=<FILE>) {
 	$merge_gff{A}{'cosi5,cosi3'}{fn($grp,A07,gff)} = $grp;
 	$merge_gff{B}{'psicas'}{fn($grp,B07,gff)} = $grp;
     }
-
 }
 close FILE;
 
@@ -112,19 +107,16 @@ foreach $grp(keys(%IDR)) {
 
     $prm = "-mincount $mincount";
     make(script=>"zeta.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -ssc=>fn($grp,A06,ssc,tsv), -annot=>$annot}, output=>{'>'=>fn($grp,A07,gff)}, between=>$prm, endpoint=>A07);
-    make(script=>"psicas.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($grp,B07,gff)}, endpoint=>B07);
+    make(script=>"psicas.pl", input=>{-ssj=>fn($grp,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($grp,B07,gff)}, between=>$prm, endpoint=>B07);
 }
 
 #######################################################################################################################################################################
-
 
 foreach $endpoint(keys(%merge_tsv)) {
     foreach $arm(keys(%{$merge_tsv{$endpoint}})) {
 	make2(script=>"merge_tsv.pl", inputs=>{-i=>\%{$merge_tsv{$endpoint}{$arm}}}, outputs=>{''=>{'>'=>fn($merge,counts,$arm,tsv)}}, endpoint=>$endpoint);
     }
 }
-
-#make(script=>"psi_cassettes.pl", input=>{-annot=>$annot,-counts=>fn($merge,counts,ssj,tsv)}, output=>{'>'=>fn($merge,psicas,ssj,tsv)}, endpoint=>'all');
 
 foreach $endpoint(keys(%mk_stat)) { 
     foreach $arm(keys(%{$mk_stat{$endpoint}})) { 
