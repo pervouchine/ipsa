@@ -50,6 +50,12 @@ and unstranded data, for data with and without bioreplicates, etc.
 
 
 \section{Detailed description of the components}
+
+\subsection{Perl libraries}
+Most of the pipeline is based standard Perl modules and a custom module called {\tt utils.pm}. All Perl scripts are located in {\tt Perl/} subdirectory.
+Since paths are not modified, in order to call a Perl script, one should do it from the main folder as {\tt perl Perl/script.pl}; otherwise {\tt utils.pm}
+will not be found.
+
 \subsection{Data index file}
 Data index file is a two-column tab-delimited file, which is supplied as an input and  whose first column contains the file name or a URL, 
 and the second column contains a list of attributes of the form {\tt attribute1="value1"; attribute2="value2";}. 
