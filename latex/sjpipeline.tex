@@ -439,16 +439,20 @@ It can be applied to any feature that was specified in the gtf input in cell\_li
 
 \section{Quality control functions}
 \subsection{Distribution of offsets}
-The following utility plot the distribution of offset frequencies, i.e., how frequently each offset value was seen. This distribution may be helpful 
-in guessing the correct margin value because some mappers have intrinsic thresholds that may be different for reads overlapping SJ and SB.
+The following utility plot the distribution of offset frequencies, i.e., how frequently each offset value has been observed. This distribution may 
+be helpful in guessing the correct margin value because some mappers have intrinsic thresholds that may be different for reads overlapping SJ and SB.
 \begin{verbatim}
 Rscript offset.r <file.tsv> <file.pdf>
 \end{verbatim}
-An example such diagram is shown in Figure~\ref{fig::qc1}.
+An example of such distribution is shown in Figure~\ref{fig::qc1}.
 \begin{figure}
 \subfloat[Offset distribution\label{fig::qc1}]{\includegraphics[width=0.5\textwidth]{fig2_crop.pdf}}
 \subfloat[Disproportion test\label{fig::qc2}]{\includegraphics[width=0.5\textwidth]{fig3_crop.pdf}}
 \end{figure}
+In order to plot offset distribution, the pipeline must be called with a different endpoint:
+\begin{verbatim}
+make -f makefile.mk QC1
+\end{verbatim}
 
 \subsection{Strand disproportion}
 Another useful test is the distribution of $\log(c_+) - \log(c_-)$, where $c_+$ and $c_-$ are the number of counts on the plus and the minus strand, 
@@ -457,6 +461,10 @@ $\log(c_+) - \log(c_-)$ shall be bimodal as shown in Figure~\ref{fig::qc2}, refl
 the other.
 \begin{verbatim}
 Rscript disproportion.r <file.tsv> <file.pdf>
+\end{verbatim}
+In order to plot  strand disproportion distribution, the pipeline must be called with a different endpoint:
+\begin{verbatim}
+make -f makefile.mk QC2
 \end{verbatim}
 
 \subsection{Summary stats on annotation status and splice sites}
