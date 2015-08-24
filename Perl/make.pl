@@ -72,10 +72,13 @@ while($line=<FILE>) {
 	make(script=>"awk '\$\$2==1'",input=>{''=>fn($name,A01,ssj,tsv)}, output=>{'>'=>fn($name,A02,ssj,tsv), -logfile=>fn($name,A02,ssj,'log')}, between=>"|perl Perl/agg.pl $prm", endpoint=>A02);
         make(script=>"awk '\$\$2==0'",input=>{''=>fn($name,A01,ssc,tsv)}, output=>{'>'=>fn($name,A02,ssc,tsv), -logfile=>fn($name,A02,ssc,'log')}, between=>"|perl Perl/agg.pl $prm", endpoint=>A02);
 
-        $merge_r{A}{ssj}{offsetdist}{fn($name,A02,ssj,'log')} = $name;
-        $merge_r{A}{ssc}{offsetdist}{fn($name,A02,ssc,'log')} = $name;
+        $merge_r{QC1}{ssj}{offsetdist}{fn($name,A02,ssj,'log')} = $name;
+        $merge_r{QC1}{ssc}{offsetdist}{fn($name,A02,ssc,'log')} = $name;
 
 	make(script=>"annotate.pl", input=>{-in=>fn($name,A02,ssj,tsv), -annot=>$annot, -dbx=>"$genome.dbx", -idx=>"$genome.idx"}, output=>{'>'=>fn($name,A03,ssj,tsv)}, after=>"-deltaSS $deltaSS", endpoint=>A03);
+
+	$merge_r{QC2}{ssj}{disprop}{fn($name,A03,ssj,tsv)} = $name;
+
 	make(script=>"choose_strand.pl", input=>{'<'=>fn($name,A03,ssj,tsv)}, output=>{'>'=>fn($name,A04,ssj,tsv), -logfile=>fn($name,A04,ssj,'log')}, before=>"-", endpoint=>A04);
 	make(script=>"constrain_ssc.pl", input=>{'<'=>fn($name,A02,ssc,tsv),-ssj=>fn($name,A04,ssj,tsv)}, output=>{'>'=>fn($name,A04,ssc,tsv)}, endpoint=>A04);	
 
@@ -129,13 +132,6 @@ foreach $endpoint(keys(%merge_tsv)) {
     }
 }
 
-foreach $endpoint(keys(%mk_stat)) { 
-    foreach $arm(keys(%{$mk_stat{$endpoint}})) { 
-        make2(script=>"mk_stat.pl", inputs=>{-i=>\%{$mk_stat{$endpoint}{$arm}}}, outputs=>{''=>{'>'=>fn($merge,stats,$arm,tsv)}}, endpoint=>$endpoint);
-	make(script=>"mk_stat.r", input=>{-i=>fn($merge,stats,$arm,tsv)}, output=>{-o=>fn($merge,stats,$arm,pdf)}, endpoint=>stats);
-    }
-}
-
 foreach $endpoint(keys(%merge_gff)) {
     foreach $arms(keys(%{$merge_gff{$endpoint}})) {
 	%outputs=();
@@ -143,6 +139,15 @@ foreach $endpoint(keys(%merge_gff)) {
 	    $outputs{$arm} = fn($merge,$endpoint,$arm,tsv);
 	}
         make2(script=>"merge_gff.pl", inputs=>{-i=>\%{$merge_gff{$endpoint}{$arms}}}, outputs=>{-o=>\%outputs}, endpoint=>$endpoint);
+    }
+}
+
+#######################################################################################################################################################################
+
+foreach $endpoint(keys(%mk_stat)) {
+    foreach $arm(keys(%{$mk_stat{$endpoint}})) {
+        make2(script=>"mk_stat.pl", inputs=>{-i=>\%{$mk_stat{$endpoint}{$arm}}}, outputs=>{''=>{'>'=>fn($merge,stats,$arm,tsv)}}, endpoint=>$endpoint);
+        make(script=>"mk_stat.r", input=>{-i=>fn($merge,stats,$arm,tsv)}, output=>{-o=>fn($merge,stats,$arm,pdf)}, endpoint=>stats);
     }
 }
 
