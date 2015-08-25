@@ -28,7 +28,7 @@ all :: example.mk
 	# Installation complete. Type 'make run' to execute a test run.
 
 run ::	example.mk ${DIR}hg19.idx ${DIR}hg19.dbx ${DIR}hg19v18.gfx
-	make -f example.mk all 
+	make -f example.mk all QC1 QC2
 	# Test run complete. The output is in the output/ directory.
 	ls -l ${DIR}output/
 
