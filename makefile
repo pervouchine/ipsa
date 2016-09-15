@@ -36,7 +36,7 @@ run ::	example.mk ${DIR}hg19.idx ${DIR}hg19.dbx ${DIR}hg19v18.gfx
 
 ${DIR}gencode.v18.annotation.gtf :
 	mkdir -p ${DIR}
-	wget ftp://ftp.sanger.ac.uk/pub/gencode/release_18/gencode.v18.annotation.gtf.gz -O ${DIR}gencode.v18.annotation.gtf.gz
+	wget http://genome.crg.eu/~dmitri/export/ipsa/gencode.v18.annotation.gtf.gz -O ${DIR}gencode.v18.annotation.gtf.gz
 	gunzip -f ${DIR}gencode.v18.annotation.gtf.gz
 
 ${DIR}chr22Y/chr22.fa :
