@@ -32,9 +32,9 @@ Integrative Pipeline for Splicing Analyses (IPSA)
 
 The integrative pipeline for splicing analyses does:
 
- * Quantification of splice junctions and splice boundaries
- * Calculation of splicing indices, exon- and intron-centric
- * Analysis of micro-exons and local splice-graph structure
+ * Quantification of splice junctions and splice sites
+ * Calculation of exon-centric and intron-centric splicing metrics
+ * Identification of micro-exons
 
 * DEPENDENCIES
 
@@ -61,6 +61,5 @@ An example of a pipeline buildout is available by running
 
 * DOCUMENTATION 
 
-The documentation on the pipeline components is available in latex/ subdirectory
-The documentation on the sjcount utility is available in sjcount/latex/ subdirectory
+The documentation on the pipeline components is currently being updated
 
