@@ -41,10 +41,11 @@ while($line=<$f>) {
     %attr = get_features($attr);
 
     @array = split /\//, $file;
-    ($target) = split /\./, pop(@array);
+    $target = pop(@array);
+    $target =~ s/\.\w*$//;
     $key = join($idsep, @attr{@id});
     $key = $target unless($key);
-    die("Key is not unique: $key\n") if($hasbeen{$key}++);
+    die("Key is not unique: $key\n") if($hasbeen{$attr{'type'}}{$key}++);
 
     if(($attr{'type'} eq "bam" || $attr{'file_format'} eq "bam") && ($attr{'view'} eq "Alignments" || $attr{'output_type'} eq "alignments")) {
 	if($attr{'readType'}=~/(\d+)(D*)$/) {
@@ -94,7 +95,7 @@ while($line=<$f>) {
         $merge_gff{A}{'psi,cosi'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'inc,exc,ret'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'psi5,psi3'}{fn($key,A07,gff)} 	= $key;
-        $merge_gff{A}{'cosi5,cosi3'}{fn($key,A07,gff)} 	= $key;
+        $merge_gff{A}{'cosi5,cosi3,cosit'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{B}{'psicas,psiloc'}{fn($key,B07,gff)} = $key;
     }
 
