@@ -179,13 +179,14 @@ foreach $chr(sort keys(%count53)) {
                 $nA = $count00{$chr}{$str}{$end} + 0;
                 $psi5  = frac($nDA, $nDX);
                 $psi3  = frac($nDA, $nXA);
+		$psit  = frac(2*$nDA, $nDX + $nXA);
                 $cosi5 = frac($nDA + $nDX, $nD);
                 $cosi3 = frac($nDA + $nXA, $nA);
 		$cosit = frac(2*$nDA, $nD + $nA);
 		next unless(join(undef, $psi5,$psi3,$cosi5,$cosi3) =~ /\d/);
 		($x, $y) = sort {$a<=>$b} ($beg, $end);
                 print join("\t", $chr, 'SJPIPE', 'intron', $x, $y, $psi5=~/\d/ ? int(500*($psi5 + $psi3)) : '.', strand_i2c($str), '.',
-                        set_attributes(psi5=>$psi5, psi3=>$psi3, cosi5=>$cosi5, cosi3=>$cosi3, cosit=>$cosit, nDA=>$nDA, nDX=>$nDX, nXA=>$nXA, nD=>$nD, nA=>$nA)), "\n";
+                        set_attributes(psi5=>$psi5, psi3=>$psi3, psit=>$psit, cosi5=>$cosi5, cosi3=>$cosi3, cosit=>$cosit, nDA=>$nDA, nDX=>$nDX, nXA=>$nXA, nD=>$nD, nA=>$nA)), "\n";
             }
         }
     }
