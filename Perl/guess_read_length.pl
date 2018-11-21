@@ -14,7 +14,7 @@ while($line=<STDIN>) {
 	$PE = $1;
 	$ST = $2;
 
-	$s = `samtools view $file | awk '\$6~/^[0-9]+M\$/' | head -n 100 | cut -f6`;
+	$s = `sjcount-3.1/samtools-0.1.18/samtools view $file | awk '\$6~/^[0-9]+M\$/' | head -n 100 | cut -f6`;
     	%f=();
     	foreach $x(split /\n/, $s) {
 	    $f{$x}++;

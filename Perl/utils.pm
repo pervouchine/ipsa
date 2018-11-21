@@ -150,7 +150,7 @@ sub make {
     makedir(values(%output));
     print "\ttouch ", join(" ", values(%output)),"\n"; #if($param{'touch'});
     print "\t$param{'script'} ",join(" ", $param{'before'}, $param{'script'}=~/\.awk$/ ? awk_input(%input,%output) : (%input, $param{'between'}, %output), $param{'after'})," \n";
-    print "$param{'endpoint'} :: ", join(" ", values(%output)), "\n" if($param{'endpoint'});
+    print "$param{'endpoint'} :: ", join(" ", (values(%output))[0]), "\n" if($param{'endpoint'});
     print "rm-$param{'endpoint'} ::\n\t rm -f ", join(" ", values(%output)), "\n" if($param{'endpoint'});
     print "touch ::\n\ttouch ", join(" ", values(%output)),"\n";
 }

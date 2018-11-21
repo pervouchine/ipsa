@@ -35,6 +35,8 @@ if(-e -r $in) {
     $f=*STDIN;
 }
 
+#make(script=>"vip1.pl", input=>{'<'=>$annot}, output=>{'>'=>$dir."sg.vip"}, mkdir=>T);
+
 while($line=<$f>) {
     chomp $line;
     ($file, $attr) = split /\t/, $line;
@@ -62,14 +64,22 @@ while($line=<$f>) {
             $file = "$repository$target.bam";
         }
 
+##
+	make(script=>"pA.pl", input=>{-bam=>$file}, after=>"-readLength $readLength", output=>{'>'=>fn($key,P01,tsv)}, endpoint=>P01);
+	make(script=>"aggregate.awk", input=>{''=>fn($key,P01,tsv)}, output=>{'>'=>fn($key,P02,tsv)}, before=>"-v degree=0 $prm", endpoint=>P02);
+##
+
+next;
 	$param = "-read1 1 -read2 0" if($attr{'sense'} eq 'MATE2_SENSE');
 	$param = "-read1 0 -read2 1" if($attr{'sense'} eq 'MATE1_SENSE');
 	make(script=>$program, input=>{-bam=>$file}, output=>{-ssj=>fn($key,A01,ssj,tsv), -ssc=>fn($key,A01,ssc,tsv), -log=>fn($key,A01,ssj,'log')},
              after=>"-nbins $readLength $param $stranded -quiet", mkdir=>T, endpoint=>A01);
 
-	$prm = "-v readLength=$readLength -v margin=$margin -v prefix=$perfix";
-	make(script=>"aggregate.awk", input=>{''=>fn($key,A01,ssj,tsv)}, output=>{'>'=>fn($key,A02,ssj,tsv), logfile=>fn($key,A02,ssj,'log')}, before=>"-v degree=1 $prm", endpoint=>A02);
-	make(script=>"aggregate.awk", input=>{''=>fn($key,A01,ssc,tsv)}, output=>{'>'=>fn($key,A02,ssc,tsv), logfile=>fn($key,A02,ssc,'log')}, before=>"-v degree=0 $prm", endpoint=>A02);
+	$prm = "-v readLength=$readLength -v margin=$margin -v prefix=$prefix";
+	make(script=>"aggregate.awk", input=>{''=>fn($key,A01,ssj,tsv)}, output=>{'>'=>fn($key,A02,ssj,tsv)}, before=>"-v degree=1 $prm", endpoint=>A02);
+
+	make(script=>"aggregate.awk", input=>{''=>fn($key,A01,ssc,tsv)}, output=>{'>'=>fn($key,A02,ssc,tsv)}, before=>"-v degree=0 $prm", endpoint=>A02);
+
 	make(script=>"aggregate.awk", input=>{''=>fn($key,A01,ssj,tsv)}, output=>{'>'=>fn($key,D01,tsv)},     before=>"-v degree=2",      endpoint=>D01);
 	make(script=>"annotate.pl", input=>{-in=>fn($key,A02,ssj,tsv), -annot=>$annot, -dbx=>"$genome.dbx", -idx=>"$genome.idx"}, output=>{'>'=>fn($key,A03,ssj,tsv)}, after=>"-deltaSS $deltaSS", endpoint=>A03);
 	make(script=>"choose_strand.awk", input=>{''=>fn($key,A03,ssj,tsv)}, output=>{'>'=>fn($key,A04,ssj,tsv)}, endpoint=>A04);
@@ -79,6 +89,7 @@ while($line=<$f>) {
 
 	make(script=>"awk", before=>"'\$\$4>=$entropy && \$\$5>=$minstatus'", input=>{''=>fn($key,A04,ssj,tsv)}, output=>{'>'=>fn($key,A06,ssj,tsv)}, endpoint=>A06);
         make(script=>"awk", before=>"'\$\$4>=$entropy'", input=>{''=>fn($key,A04,ssc,tsv)}, output=>{'>'=>fn($key,A06,ssc,tsv)}, endpoint=>A06);
+	make(script=>"shifts.pl", input=>{-in=>fn($key,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($key,G06,ssj,tsv)}, endpoint=>shifts);
 
         make(script=>'tsv2bed.pl', input=>{'<'=>fn($key,A06,ssj,tsv)}, output=>{'>'=>fn($key,E06,ssj,bed)}, between=>"-extra 2,3,4,5,6,7", endpoint=>E06);
         make(script=>'tsv2bed.pl', input=>{'<'=>fn($key,A06,ssc,tsv)}, output=>{'>'=>fn($key,E06,ssc,bed)}, between=>"-extra 2 -ssc", endpoint=>E06);
@@ -87,6 +98,9 @@ while($line=<$f>) {
 	$prm = "-mincount $mincount";
 
     	make(script=>"zeta.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -ssc=>fn($key,A06,ssc,tsv), -annot=>$annot, -exons=>fn($key,D06,tsv)}, output=>{'>'=>fn($key,A07,gff)}, between=>$prm, endpoint=>A07);
+
+	make(script=>"alef.pl", input=>{-ssj=>fn($key,A06,ssj,tsv),-vip=>$dir."sg.vip"}, output=>{'>'=>fn($key,A08,tsv)}, endpoint=>A08);
+
     	make(script=>"psicas.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($key,B07,gff)}, endpoint=>B07);
 
         $merge_tsv{A}{ssj}{fn($key,A06,ssj,tsv)} 	= $key;
