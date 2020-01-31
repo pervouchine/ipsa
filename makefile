@@ -1,6 +1,6 @@
 DIR=example/
 MAPTOOLSDIR=maptools-3.2/
-SJCOUNTDIR=sjcount-full/
+SJCOUNTDIR=sjcount-3.1/
 WEB=http://cb.skoltech.ru/dp/ipsa/
 
 ###############################################################################################
