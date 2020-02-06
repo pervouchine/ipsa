@@ -1,5 +1,4 @@
 #!/usr/bin/perl
-use lib '/home/dp/ipsa';
 use Perl::utils;
 
 if(@ARGV==0) {
@@ -9,7 +8,7 @@ if(@ARGV==0) {
 parse_command_line( read1 => {description=>'flip read1 yes/no (1/0)', default=>1},
 		    read2 => {description=>'flip read2 yes/no (1/0)', default=>0},
 		    readLength => {description=>'read length', ifabsent=>'not specified'},
-		    minmatch => {description=>'min number of nucleoties for match part', default=>30},
+		    minmatch => {description=>'min number of nucleoties for match part', default=>31},
 		    mintail  => {description=>'min number of nucleoties for polyA part', default=>4},
 		    minpercenta => {description=>'min percent A in polyA tail', default=>80},
 		    unstranded => {description=>'unstranded flag',store=>T},
@@ -39,8 +38,8 @@ while(<FILE>){
 	$x = $1;
 	$y = $2;
 	if($x >= $minmatch && $y >= $mintail) {
-	    if(($strand==0 || $unstranded) && perc(substr($seq,-$y,$y),'A') >= $minpercenta) {
-	    	$count{join("\t",join("_", $ref, $pos+$x, "+"), 0, $y)}++; 
+	    if(perc(substr($seq,-$y,$y),'A') >= $minpercenta) {
+		print "3p\t$strand\n";
 	    }
 	}
     }
@@ -48,9 +47,8 @@ while(<FILE>){
 	$x = $2;
 	$y = $1;
 	if($x >= $minmatch && $y >= $mintail) {
-            if(($strand==1 || $unstranded) && perc(substr($seq,0,$y),'T') >= $minpercenta) {
-		$count{join("\t",join("_", $ref, $pos+1, "-"), 0, $y)}++; 
-		## Note that soft clip doesn't consume the reference.
+            if(perc(substr($seq,0,$y),'T') >= $minpercenta) {
+		print "5p\t$strand\n";
 	    }
 	}
     }   
