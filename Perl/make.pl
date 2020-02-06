@@ -65,11 +65,10 @@ while($line=<$f>) {
         }
 
 ##
-	make(script=>"pA.pl", input=>{-bam=>$file}, after=>"-readLength $readLength", output=>{'>'=>fn($key,P01,tsv)}, endpoint=>P01);
-	make(script=>"aggregate.awk", input=>{''=>fn($key,P01,tsv)}, output=>{'>'=>fn($key,P02,tsv)}, before=>"-v degree=0 $prm", endpoint=>P02);
+	make(script=>"pA.pl", input=>{-bam=>$file}, after=>"-readLength $readLength $stranded", output=>{'>'=>fn($key,P01,tsv)}, endpoint=>P01);
+	make(script=>"aggregate.awk", input=>{''=>fn($key,P01,tsv)}, output=>{'>'=>fn($key,P02,tsv)}, before=>"-v degree=0", endpoint=>P02);
 ##
 
-next;
 	$param = "-read1 1 -read2 0" if($attr{'sense'} eq 'MATE2_SENSE');
 	$param = "-read1 0 -read2 1" if($attr{'sense'} eq 'MATE1_SENSE');
 	make(script=>$program, input=>{-bam=>$file}, output=>{-ssj=>fn($key,A01,ssj,tsv), -ssc=>fn($key,A01,ssc,tsv), -log=>fn($key,A01,ssj,'log')},
@@ -101,7 +100,7 @@ next;
 
 	make(script=>"alef.pl", input=>{-ssj=>fn($key,A06,ssj,tsv),-vip=>$dir."sg.vip"}, output=>{'>'=>fn($key,A08,tsv)}, endpoint=>A08);
 
-    	make(script=>"psicas.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($key,B07,gff)}, endpoint=>B07);
+    	make(script=>"psimod.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($key,B07,gff)}, endpoint=>B07);
 
         $merge_tsv{A}{ssj}{fn($key,A06,ssj,tsv)} 	= $key;
         $merge_tsv{A}{ssc}{fn($key,A06,ssc,tsv)} 	= $key;
@@ -110,7 +109,7 @@ next;
         $merge_gff{A}{'inc,exc,ret'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'psi5,psi3'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'cosi5,cosi3,cosit'}{fn($key,A07,gff)} 	= $key;
-        $merge_gff{B}{'psicas,psiloc'}{fn($key,B07,gff)} = $key;
+        #$merge_gff{B}{'psicas,psiloc'}{fn($key,B07,gff)} = $key;
     }
 
     if(($attr{'type'} eq "gff" || $attr{'type'} eq "gtf") && $attr{'view'} =~ /^Transcript/) { 
