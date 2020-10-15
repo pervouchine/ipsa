@@ -98,9 +98,11 @@ while($line=<$f>) {
 
     	make(script=>"zeta.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -ssc=>fn($key,A06,ssc,tsv), -annot=>$annot, -exons=>fn($key,D06,tsv)}, output=>{'>'=>fn($key,A07,gff)}, between=>$prm, endpoint=>A07);
 
-	make(script=>"alef.pl", input=>{-ssj=>fn($key,A06,ssj,tsv),-vip=>$dir."sg.vip"}, output=>{'>'=>fn($key,A08,tsv)}, endpoint=>A08);
+	make(script=>"prime.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -ssc=>fn($key,A06,ssc,tsv)}, output=>{'>'=>fn($key,M07,tsv)}, between=>$prm, endpoint=>M07);
 
-    	make(script=>"psimod.pl", input=>{-ssj=>fn($key,A06,ssj,tsv), -annot=>$annot}, output=>{'>'=>fn($key,B07,gff)}, endpoint=>B07);
+	#make(script=>"alef.pl", input=>{-ssj=>fn($key,A06,ssj,tsv),-vip=>$dir."sg.vip"}, output=>{'>'=>fn($key,A08,tsv)}, endpoint=>A08);
+
+    	make(script=>"print_gff_attributes.pl", input=>{"<"=>fn($key,A07,gff)}, output=>{'>'=>fn($key,B07,tsv)}, before=>"INT inc exc", endpoint=>B07);
 
         $merge_tsv{A}{ssj}{fn($key,A06,ssj,tsv)} 	= $key;
         $merge_tsv{A}{ssc}{fn($key,A06,ssc,tsv)} 	= $key;
@@ -109,7 +111,6 @@ while($line=<$f>) {
         $merge_gff{A}{'inc,exc,ret'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'psi5,psi3'}{fn($key,A07,gff)} 	= $key;
         $merge_gff{A}{'cosi5,cosi3,cosit'}{fn($key,A07,gff)} 	= $key;
-        #$merge_gff{B}{'psicas,psiloc'}{fn($key,B07,gff)} = $key;
     }
 
     if(($attr{'type'} eq "gff" || $attr{'type'} eq "gtf") && $attr{'view'} =~ /^Transcript/) { 
